@@ -1,0 +1,12 @@
+[versions]
+kotlin = "2.0.20"
+echo = "1.0.0"
+datetime = "0.6.1"
+detekt = "1.23.6"
+
+[libraries]
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
