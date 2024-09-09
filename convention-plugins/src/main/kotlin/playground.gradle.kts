@@ -1,3 +1,5 @@
+import tasks.FibonacciTask
+
 plugins {
     kotlin("jvm")
 }
@@ -47,5 +49,33 @@ tasks.register("countCompiledSize") {
             size += file.length()
         }
         println("The size of the compiled classes in subproject1 is $size bytes")
+    }
+}
+
+tasks.register<Copy>("copyCompiledClasses") {
+    group = "build"
+    description = "Copy the compiled classes to a specific directory"
+    dependsOn("compileKotlin")
+    from("app/build/classes/kotlin/main")
+    into("compiled-classes")
+}
+
+tasks.register<FibonacciTask>("fib_10") {
+    number.set(10)
+    doFirst {
+        println("Calculating the 10th Fibonacci number...")
+    }
+    doLast {
+        println("Calculation complete.")
+    }
+}
+
+tasks.register<FibonacciTask>("fib_20") {
+    number.set(20)
+    doFirst {
+        println("Calculating the 20th Fibonacci number...")
+    }
+    doLast {
+        println("Calculation complete.")
     }
 }
