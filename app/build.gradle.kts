@@ -1,13 +1,20 @@
 plugins {
-    id("jvm.conventions")
     application
-    alias(libs.plugins.detekt)
 }
 
 dependencies {
-    implementation(libs.kotlinx.datetime)
+    implementation(
+        fileTree("libs") {
+            include("lib-1.0.0.jar")
+            // include("...")
+        }
+    )
 }
 
 application {
-    mainClass.set("cl.ravenhill.EchoKt")
+    mainClass.set("cl.ravenhill.EchoAppKt")
+}
+
+tasks.named("compileKotlin") {
+    dependsOn(":lib:copyLib")
 }

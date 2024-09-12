@@ -1,7 +1,22 @@
+import extensions.GreetExtension
+import plugins.HelloPlugin
+import plugins.VersioningPlugin
 import tasks.FibonacciTask
+import tasks.TextProcessingTask
 
 plugins {
     kotlin("jvm")
+}
+
+project.extensions.create("greeting", GreetExtension::class)
+
+tasks.register("greet") {
+    group = "playground"
+    description = "Prints a greeting message"
+    doLast {
+        val module = project.extensions.getByType(GreetExtension::class).module
+        println("Hello, from $module!")
+    }
 }
 
 tasks.register("message") {
@@ -31,12 +46,6 @@ tasks.register("fib") {
     }
 }
 
-tasks.register("greet") {
-    group = "Playground"
-    description = "Prints a greeting message"
-    println("Hello, Gradle!")
-}
-
 tasks.register("countCompiledSize") {
     group = "build"
     description = "Count the size of the compiled classes"
@@ -61,7 +70,9 @@ tasks.register<Copy>("copyCompiledClasses") {
 }
 
 tasks.register<FibonacciTask>("fib_10") {
-    number.set(10)
+    group = "playground"
+    description = "Calculates the 10th Fibonacci number"
+    number = 10
     doFirst {
         println("Calculating the 10th Fibonacci number...")
     }
@@ -71,7 +82,9 @@ tasks.register<FibonacciTask>("fib_10") {
 }
 
 tasks.register<FibonacciTask>("fib_20") {
-    number.set(20)
+    group = "playground"
+    description = "Calculates the 20th Fibonacci number"
+    number = 20
     doFirst {
         println("Calculating the 20th Fibonacci number...")
     }
@@ -79,3 +92,13 @@ tasks.register<FibonacciTask>("fib_20") {
         println("Calculation complete.")
     }
 }
+
+tasks.register<TextProcessingTask>("processText") {
+    inputFile = file("input.txt")
+    outputFile = file("output.txt")
+    doFirst { println("Processing text...") }
+    doLast { println("Processing complete.") }
+}
+
+apply<HelloPlugin>()
+apply<VersioningPlugin>()
