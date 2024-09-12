@@ -1,6 +1,11 @@
 import extensions.CopyLibExtension
+import extensions.FatJarExtension
 
-extensions.create<CopyLibExtension>("copyLibConfig")
+plugins {
+    base
+}
+
+project.extensions.create<CopyLibExtension>("copyLibConfig")
 
 tasks.register<Copy>("copyLib") {
     group = "build"
@@ -79,4 +84,27 @@ fun printMissingFilesReport(missingFiles: List<String>) = if (missingFiles.isEmp
 
 tasks.named("copyLib") {
     dependsOn("jar")
+}
+
+project.extensions.create<FatJarExtension>("fatJar")
+
+tasks.register<Jar>("fatJar") {
+    group = "build"
+    description = "Creates a fat JAR with all dependencies"
+
+    val fatJarConfig = project.extensions.getByType<FatJarExtension>()
+
+    archiveClassifier = "all"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Implementation-Title"] = fatJarConfig.implementationTitle
+        attributes["Implementation-Version"] = fatJarConfig.implementationVersion
+    }
+    from(sourceSets.main.get().output)
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get()
+            .filter { file -> file.name.endsWith("jar") }
+            .map { file -> zipTree(file) }
+    })
 }

@@ -9,3 +9,8 @@ dependencies {
 copyLibConfig {
     libNames = listOf(project.name)
 }
+
+fatJar {
+    implementationTitle = project.name
+    implementationVersion = project.version.toString()
+}
